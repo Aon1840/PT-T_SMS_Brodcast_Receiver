@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "787853548033",
+    "firebase_url": "https://kotliauthentication.firebaseio.com",
+    "project_id": "kotliauthentication",
+    "storage_bucket": "kotliauthentication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787853548033:android:606da14d8c124c22",
+        "android_client_info": {
+          "package_name": "com.example.kotlin_tutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787853548033-ufmafd4qm6nuh3rsfkgnivp008tcj7dd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaIzWsk8wlRxa5XHrlk5bWYY-pNbBBcdg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787853548033:android:e58dfb8cf1d4559a",
+        "android_client_info": {
+          "package_name": "com.example.myfirstapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787853548033-ufmafd4qm6nuh3rsfkgnivp008tcj7dd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaIzWsk8wlRxa5XHrlk5bWYY-pNbBBcdg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

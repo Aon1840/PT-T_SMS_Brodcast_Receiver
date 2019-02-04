@@ -28,69 +28,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
             String address = extras.getString("MessageNumber");
             String message = extras.getString("Message");
-            Log.d("TESTTTTT", "Address: "+address+" ,message: "+message);
+            Log.d("TESTTTTT", "Address: " + address + " ,message: " + message);
         }
 
-//        isSmsPermissionGranted();
-//
-//        showRequestPermissionInfoAlertDialog(true);
-//        SmsHelper.sendSampleSms("0882497718","Hello");
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults) {
-//        switch (requestCode) {
-//            case SMS_PERMISSION_CODE: {
-//                Log.d("TEST","Grant Result/length: "+grantResults.length);
-//                Log.d("TEST","Grant Result[0]: "+grantResults[0]);
-//                Log.d("TEST","PackageManager.PERMISSION_GRANTED: "+PackageManager.PERMISSION_GRANTED);
-//
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(this,"Permission is Grantedfsfdsfsfdfhfggdadasdasdadsdasddasdadas", Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(this,"Permission is Not Granted", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//            return;
-//        }
-//    }
-//
-//
-//    public void showRequestPermissionInfoAlertDialog(final boolean makeSystemRequet){
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Alert for Requet Permission");
-//        builder.setMessage("Test message");
-//
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//                if (makeSystemRequet){
-//                    requestReadAndSendSmsPermission();
-//                }
-//            }
-//        });
-//
-//        builder.setCancelable(false);
-//        builder.show();
-//    }
-//
-//    // Check sms permission
-//    public boolean isSmsPermissionGranted(){
-//        boolean test = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
-//        Log.d("CHECK","Permission is: "+test);
-//        return ContextCompat.checkSelfPermission(this,Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
-//    }
-//
-//    // Check permission read and send sms
-//    private void requestReadAndSendSmsPermission(){
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
-//            Toast.makeText(this,"Pass this condition", Toast.LENGTH_LONG).show();
-//        }
-//        Log.d("CHECK","requestReadAndSendSmsPermission is: "+Manifest.permission.READ_SMS);
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, SMS_PERMISSION_CODE);
-//    }
 }

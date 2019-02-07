@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -27,6 +28,22 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
         smsDetection(context, intent);
 
+//        wifiDetection(context, intent);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        Intent intent2;
+
+        if (connectivityManager.getActiveNetworkInfo() != null
+                ) {
+            Toast.makeText(context,"Internet is connecting",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context,"Internet is not connecting",Toast.LENGTH_LONG).show();
+        }
+
+
+    }
+
+    private void wifiDetection(Context context, Intent intent) {
         int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
         switch (wifiStateExtra) {
             case WifiManager.WIFI_STATE_ENABLED:
@@ -68,7 +85,6 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             context.startActivity(intent1);
         }
     }
-
 
     //    It not working??
     public void ringtone(){

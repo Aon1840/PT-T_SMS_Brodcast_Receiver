@@ -1,11 +1,13 @@
 package com.example.myfirstapplication;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -19,9 +21,25 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     private Context context;
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        smsDetection(context, intent);
+
+        int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+        switch (wifiStateExtra) {
+            case WifiManager.WIFI_STATE_ENABLED:
+                Toast.makeText(context,"Wifi is connected!!",Toast.LENGTH_LONG).show();
+                break;
+
+            case WifiManager.WIFI_STATE_DISABLED:
+                Toast.makeText(context,"Wifi is not connected!!",Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
+    private void smsDetection(Context context, Intent intent) {
         if (!intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             return;
         }
@@ -49,11 +67,10 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             intent1.putExtra("phone",phone);
             context.startActivity(intent1);
         }
-
     }
 
 
-//    It not working??
+    //    It not working??
     public void ringtone(){
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

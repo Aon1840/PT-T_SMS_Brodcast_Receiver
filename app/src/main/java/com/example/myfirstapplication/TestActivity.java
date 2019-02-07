@@ -1,7 +1,9 @@
 package com.example.myfirstapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Camera;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ public class TestActivity extends AppCompatActivity {
         String phone = extras.getString("phone");
 
         tvTest.setText("From: "+phone+"\n"+"Message: "+body);
+
     }
 
 

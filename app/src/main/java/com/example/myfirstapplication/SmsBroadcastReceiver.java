@@ -3,6 +3,9 @@ package com.example.myfirstapplication;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -13,6 +16,8 @@ import android.widget.Toast;
 import okhttp3.internal.http2.Http2Connection;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
+
+    private Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,8 +40,27 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
 
         if (body.startsWith("Hello")){
+            ringtone();
             Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
+
+            Intent intent1 = new Intent(context, TestActivity.class);
+            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent1.putExtra("body",body);
+            intent1.putExtra("phone",phone);
+            context.startActivity(intent1);
         }
 
+    }
+
+
+//    It not working??
+    public void ringtone(){
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone ringtone = RingtoneManager.getRingtone(context, notification);
+            ringtone.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -23,7 +23,7 @@ public class TestActivity extends AppCompatActivity {
         String body = extras.getString("body");
         String phone = extras.getString("phone");
 
-        tvTest.setText("From: "+phone+"\n"+"Message: "+body);
+//        tvTest.setText("From: "+phone+"\n"+"Message: "+body);
 
     }
 

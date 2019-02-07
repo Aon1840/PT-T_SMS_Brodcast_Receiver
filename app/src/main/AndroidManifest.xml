@@ -33,9 +33,16 @@
 
         <receiver
             android:name=".SmsBroadcastReceiver"
-            android:permission="android.permission.BROADCAST_SMS | com.AEDesign.communication.WifiReceiver">
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".InternetBroadcastReceiver"
+            android:permission="om.AEDesign.communication.WifiReceiver">
+            <intent-filter android:priority="1000">
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>

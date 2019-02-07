@@ -22,71 +22,60 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     private Context context;
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
+        String body="";
+        String phone="";
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
+                phone = smsMessage.getDisplayOriginatingAddress();
+                body += smsMessage.getMessageBody();
+                Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
+            }
 
-        smsDetection(context, intent);
+            if (body.startsWith("Hello")){
+                ringtone();
+                Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
 
-//        wifiDetection(context, intent);
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        Intent intent2;
-
-        if (connectivityManager.getActiveNetworkInfo() != null
-                ) {
-            Toast.makeText(context,"Internet is connecting",Toast.LENGTH_LONG).show();
+                Intent intent1 = new Intent(context, TestActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent1.putExtra("body",body);
+                intent1.putExtra("phone",phone);
+                context.startActivity(intent1);
+            }
         } else {
-            Toast.makeText(context,"Internet is not connecting",Toast.LENGTH_LONG).show();
-        }
 
+            if (!intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+                return;
+            }
+
+            Bundle bundle = intent.getExtras();
+            Object[] data = (Object[]) bundle.get("pdus");
+
+
+            for (int i=0; i< data.length; i++){
+                SmsMessage message = SmsMessage.createFromPdu((byte[]) data[i]);
+                body += message.getMessageBody();
+            }
+            phone = SmsMessage.createFromPdu((byte[]) data[0]).getDisplayOriginatingAddress();
+            Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
+
+            if (body.startsWith("Hello")){
+                ringtone();
+                Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
+
+                Intent intent1 = new Intent(context, TestActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent1.putExtra("body",body);
+                intent1.putExtra("phone",phone);
+                context.startActivity(intent1);
+            }
+        }
 
     }
 
-    private void wifiDetection(Context context, Intent intent) {
-        int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-        switch (wifiStateExtra) {
-            case WifiManager.WIFI_STATE_ENABLED:
-                Toast.makeText(context,"Wifi is connected!!",Toast.LENGTH_LONG).show();
-                break;
 
-            case WifiManager.WIFI_STATE_DISABLED:
-                Toast.makeText(context,"Wifi is not connected!!",Toast.LENGTH_LONG).show();
-                break;
-        }
-    }
-
-    private void smsDetection(Context context, Intent intent) {
-        if (!intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
-            return;
-        }
-
-        Bundle bundle = intent.getExtras();
-        Object[] data = (Object[]) bundle.get("pdus");
-
-        String body = "";
-
-        for (int i=0; i< data.length; i++){
-            SmsMessage message = SmsMessage.createFromPdu((byte[]) data[i]);
-            body += message.getMessageBody();
-        }
-
-        String phone = SmsMessage.createFromPdu((byte[]) data[0]).getDisplayOriginatingAddress();
-        Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
-
-        if (body.startsWith("Hello")){
-            ringtone();
-            Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
-
-            Intent intent1 = new Intent(context, TestActivity.class);
-            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent1.putExtra("body",body);
-            intent1.putExtra("phone",phone);
-            context.startActivity(intent1);
-        }
-    }
-
-    //    It not working??
+    //    TODO: It not working??
     public void ringtone(){
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

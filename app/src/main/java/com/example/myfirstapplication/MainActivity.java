@@ -27,14 +27,13 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvHello;
     private WifiManager wifiManager;
+    private static final int SMS_PERMISSION_CODE = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        isConnectedInternet();
 
     }
 

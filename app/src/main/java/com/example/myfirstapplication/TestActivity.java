@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class TestActivity extends AppCompatActivity {
 
     private TextView tvTest;
-    String phone, body, message;
+    String phone, body;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,6 @@ public class TestActivity extends AppCompatActivity {
         if (extras != null) {
             body = extras.getString("body");
             phone = extras.getString("phone");
-            message = extras.getString("message");
         }
 
         tvTest.setText("From: "+phone+"\n"+"Message: "+body);

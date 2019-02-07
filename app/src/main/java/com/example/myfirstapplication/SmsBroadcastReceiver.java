@@ -32,8 +32,11 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         }
 
         String phone = SmsMessage.createFromPdu((byte[]) data[0]).getDisplayOriginatingAddress();
-        Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
         Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
+
+        if (body.startsWith("Hello")){
+            Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
+        }
 
     }
 }

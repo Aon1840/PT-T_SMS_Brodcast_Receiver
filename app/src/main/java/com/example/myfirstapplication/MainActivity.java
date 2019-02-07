@@ -27,12 +27,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String address = extras.getString("MessageNumber");
-            String message = extras.getString("Message");
-            Log.d("TESTTTTT", "Address: " + address + " ,message: " + message);
-        }
 
     }
 }

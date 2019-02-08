@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -18,11 +19,15 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+
+
     private final String CH1 = "CH1";
     int idNotiPayload = createId();
+    String sn;
 
     public void onNewToken(String token) {
         Log.d("TAG", "Refreshed token: " + token);
@@ -45,37 +50,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.d("getFrom", "From: "+remoteMessage.getFrom());
 
+
+        if (remoteMessage.getData() != null) {
+            Log.d("MESSAGE","Pass Data Message");
+
+            Map<String, String> data = remoteMessage.getData();
+            sn = data.get("test");
+        }
+
         if (remoteMessage.getNotification() != null) {
-            Log.d("MESSAGE","Notification Payload: "+remoteMessage.getNotification());
+            Log.d("MESSAGE", "Pass Notifiaction Message");
+            sn = remoteMessage.getNotification().getBody();
+        }
 
-            String sn = remoteMessage.getNotification().getBody();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CH1);
+        builder.setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentTitle("MyFirstApplication")
+                .setContentText(sn)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND);
 
-            Intent resultIntent = new Intent(this, MainActivity.class);
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addNextIntentWithParentStack(resultIntent);
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(idNotiPayload, builder.build());
 
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.d("TEST MESSAGE---------", "Message is: " + sn);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CH1);
-            builder.setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentIntent(resultPendingIntent)
-                    .setContentTitle("MyFirstApplication")
-                    .setContentText(sn)
-                    .setAutoCancel(true)
-                    .setDefaults(Notification.DEFAULT_SOUND);
-
-            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-            notificationManagerCompat.notify(idNotiPayload, builder.build());
-
-            Log.d("TEST MESSAGE---------", "Message is: "+sn);
-
-            if (sn.startsWith("Hello")) {
-                Intent intent1 = new Intent(getApplicationContext(), TestActivity.class);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent1);
-            }
-
+        if (sn.startsWith("Hello")) {
+            Intent intent1 = new Intent(getApplicationContext(), TestActivity.class);
+            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getApplicationContext().startActivity(intent1);
         }
     }
 
@@ -85,4 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         return id;
     }
+
+
+
 }

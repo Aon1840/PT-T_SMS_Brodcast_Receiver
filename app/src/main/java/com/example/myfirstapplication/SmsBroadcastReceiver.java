@@ -27,11 +27,18 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String body="";
         String phone="";
+        Bundle extras = intent.getExtras();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
                 phone = smsMessage.getDisplayOriginatingAddress();
                 body += smsMessage.getMessageBody();
                 Log.d("TEST from >= Kitkat ---", "SMS detected: From " + phone + " With text " + body);
+            }
+
+            if (extras != null) {
+                body = extras.getString("data");
+                Log.d("data from sms----",body);
             }
 
             if (body.startsWith("Hello")){

@@ -1,30 +1,33 @@
 package com.example.myfirstapplication.Activity;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myfirstapplication.Database.AppDatabase;
+import com.example.myfirstapplication.Database.User;
 import com.example.myfirstapplication.R;
 import com.example.myfirstapplication.Service.SmsBroadcastReceiver;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private SmsBroadcastReceiver smsBroadcastReceiver;
     private String fcmToken;
     private FirebaseAuth mAuth;
+
+    private String DB_NAME = "user";
+    private AppDatabase appDatabase;
 
 
     @Override
@@ -52,33 +58,40 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d(TAG,"Current User:"+currentUser);
 
-//        mAuth.createUserWithEmailAndPassword("aonattapon1840.ap@gmail.com", "12345679")
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d(TAG,"createUserWithEmail: Success!");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            Toast.makeText(MainActivity.this,"User: "+user,Toast.LENGTH_LONG).show();
-//                        } else {
-//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(MainActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+        appDatabase = Room.databaseBuilder(this,AppDatabase.class,DB_NAME).build();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+//        insertUser();
+        getUser();
+    }
+
+    private void getUser() {
+        new AsyncTask<List<User>, Void, List<User>>() {
             @Override
-            public void onClick(View v) {
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
+            protected List<User> doInBackground(List<User>... lists) {
+                List<User> users = appDatabase.userDao().getAll();
+                Log.d(TAG,"--------- Success from getUser: "+users.get(1).getUid()+" "+users.get(1).getFirstName()+" "+users.get(1).getLastName());
+                return users;
             }
-        });
+        }.execute();
+        Log.d(TAG,"--------- Success from getUser");
+    }
 
+    private void insertUser() {
+        User user = new User();
+        user.setFirstName("Attaporn");
+        user.setLastName("Peungsook");
+//        insertTask(user);
+    }
 
+    public void insertTask(final User user) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                appDatabase.userDao().createUser(user);
+                return null;
+            }
+        }.execute();
+        Log.d(TAG,"-------------- Success from insertTask");
     }
 
     private void initInstance() {
@@ -120,4 +133,20 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,"Internet is not connecting",Toast.LENGTH_LONG).show();
         }
     }
+
+    //        mAuth.createUserWithEmailAndPassword("aonattapon1840.ap@gmail.com", "12345679")
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG,"createUserWithEmail: Success!");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            Toast.makeText(MainActivity.this,"User: "+user,Toast.LENGTH_LONG).show();
+//                        } else {
+//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                            Toast.makeText(MainActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
 }

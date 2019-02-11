@@ -63,8 +63,17 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "getInstanceId Token: " + fcmToken, Toast.LENGTH_LONG).show();
                         Log.d("TAG-------------", "token: " + fcmToken);
 
+                        tvHello = (TextView) findViewById(R.id.tvHello);
+//                        tvHello.setText("Hello Attapon Peungsook");
+                        tvHello.setText(fcmToken);
+                        Log.d("TAG-------------", "token: " + fcmToken);
+
                     }
                 });
+
+//        tvHello = (TextView) findViewById(R.id.tvHello);
+//        tvHello.setText("Hello Attapon Peungsook");
+//        Log.d("TAG-------------", "token: " + fcmToken);
 
     }
 

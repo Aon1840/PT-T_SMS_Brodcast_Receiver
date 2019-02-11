@@ -51,35 +51,57 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("getFrom", "From: "+remoteMessage.getFrom());
 
 
-        if (remoteMessage.getData() != null) {
-            Log.d("MESSAGE","Pass Data Message");
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Log.d("SDK","SDK VERSION IS: "+ Build.VERSION.SDK_INT);
 
-            Map<String, String> data = remoteMessage.getData();
-            sn = data.get("test");
+            if (remoteMessage.getData() != null) {
+                Log.d("MESSAGE","Pass Data Message");
+
+                Map<String, String> data = remoteMessage.getData();
+                sn = data.get("test");
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CH1);
+                builder.setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setContentTitle("MyFirstApplication")
+                        .setContentText(sn)
+                        .setAutoCancel(true)
+                        .setDefaults(Notification.DEFAULT_SOUND);
+
+                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+                notificationManagerCompat.notify(idNotiPayload, builder.build());
+
+                Log.d("TEST MESSAGE---------", "Message is: " + sn);
+
+                if (sn.startsWith("Hello")) {
+                    Intent intent1 = new Intent(getApplicationContext(), TestActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent1);
+                }
+            }
         }
 
-        if (remoteMessage.getNotification() != null) {
-            Log.d("MESSAGE", "Pass Notifiaction Message");
-            sn = remoteMessage.getNotification().getBody();
-        }
+//        if (remoteMessage.getNotification() != null) {
+//            Log.d("MESSAGE", "Pass Notifiaction Message");
+//            sn = remoteMessage.getNotification().getBody();
+//        }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CH1);
-        builder.setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("MyFirstApplication")
-                .setContentText(sn)
-                .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(idNotiPayload, builder.build());
-
-        Log.d("TEST MESSAGE---------", "Message is: " + sn);
-
-        if (sn.startsWith("Hello")) {
-            Intent intent1 = new Intent(getApplicationContext(), TestActivity.class);
-            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getApplicationContext().startActivity(intent1);
-        }
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CH1);
+//        builder.setSmallIcon(R.mipmap.ic_launcher_round)
+//                .setContentTitle("MyFirstApplication")
+//                .setContentText(sn)
+//                .setAutoCancel(true)
+//                .setDefaults(Notification.DEFAULT_SOUND);
+//
+//        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+//        notificationManagerCompat.notify(idNotiPayload, builder.build());
+//
+//        Log.d("TEST MESSAGE---------", "Message is: " + sn);
+//
+//        if (sn.startsWith("Hello")) {
+//            Intent intent1 = new Intent(getApplicationContext(), TestActivity.class);
+//            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            getApplicationContext().startActivity(intent1);
+//        }
     }
 
     private int createId() {

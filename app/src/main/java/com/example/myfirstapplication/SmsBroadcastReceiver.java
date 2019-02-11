@@ -1,6 +1,7 @@
 package com.example.myfirstapplication;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,52 +24,36 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     private Context context;
 
+    @TargetApi(Build.VERSION_CODES.N)
     @Override
     public void onReceive(Context context, Intent intent) {
         String body="";
         String phone="";
-        Bundle extras = intent.getExtras();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
                 phone = smsMessage.getDisplayOriginatingAddress();
-                body += smsMessage.getMessageBody();
+                body = smsMessage.getMessageBody();
                 Log.d("TEST from >= Kitkat ---", "SMS detected: From " + phone + " With text " + body);
             }
 
-            if (extras != null) {
-                body = extras.getString("data");
-                Log.d("data from sms----",body);
+        } else {
+
+            if (!intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+                return;
             }
 
-            if (body.startsWith("Hello")){
-                ringtone();
-                Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
+            Bundle bundle = intent.getExtras();
+            Object[] data = (Object[]) bundle.get("pdus");
 
-                Intent intent1 = new Intent(context, TestActivity.class);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent1.putExtra("body",body);
-                intent1.putExtra("phone",phone);
-                context.startActivity(intent1);
+            for (int i = 0; i < data.length; i++) {
+                SmsMessage message = SmsMessage.createFromPdu((byte[]) data[i]);
+                body += message.getMessageBody();
             }
+            phone = SmsMessage.createFromPdu((byte[]) data[0]).getDisplayOriginatingAddress();
+            Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
+
         }
-//        -------------------------------------------------------------------------------------------------------------
-
-        Log.d("TESTTTTTT-----","API LEVEL 21 Pass this condition");
-        if (!intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
-            return;
-        }
-
-        Bundle bundle = intent.getExtras();
-        Object[] data = (Object[]) bundle.get("pdus");
-
-        for (int i=0; i< data.length; i++){
-            SmsMessage message = SmsMessage.createFromPdu((byte[]) data[i]);
-            body += message.getMessageBody();
-        }
-        phone = SmsMessage.createFromPdu((byte[]) data[0]).getDisplayOriginatingAddress();
-        Log.d("TESTTTTT----", "SMS detected: From " + phone + " With text " + body);
-
         if (body.startsWith("Hello")){
             ringtone();
             Toast.makeText(context,"SMS detected: From " + phone + " With text " + body,Toast.LENGTH_LONG).show();
@@ -79,8 +64,6 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             intent1.putExtra("phone",phone);
             context.startActivity(intent1);
         }
-
-
     }
 
 

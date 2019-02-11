@@ -1,16 +1,12 @@
-package com.example.myfirstapplication;
+package com.example.myfirstapplication.Service;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -18,7 +14,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import okhttp3.internal.http2.Http2Connection;
+import com.example.myfirstapplication.Activity.TestActivity;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
 

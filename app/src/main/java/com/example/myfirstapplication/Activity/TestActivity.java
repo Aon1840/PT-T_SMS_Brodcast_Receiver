@@ -1,4 +1,4 @@
-package com.example.myfirstapplication;
+package com.example.myfirstapplication.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.myfirstapplication.R;
 
 public class TestActivity extends AppCompatActivity {
 

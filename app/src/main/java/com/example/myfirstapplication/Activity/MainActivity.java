@@ -50,30 +50,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("TEST----", "SDK is: "+Build.VERSION.SDK_INT);
 
-        registerReceiver(smsBroadcastReceiver, new IntentFilter("android.provider.Telophony.SMS_RECEIVED"));
         initInstance();
-        initFcmToken();
-
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d(TAG,"Current User:"+currentUser);
-
-        appDatabase = Room.databaseBuilder(this,AppDatabase.class,DB_NAME).build();
 
 //        insertUser();
-        getUser();
+//        getUser();
+        getUserName();
     }
+
+    private void getUserName() {
+        new AsyncTask<List<User>, Void, List<User>>(){
+            @Override
+            protected List<User> doInBackground(List<User>... users) {
+                List<User> user = appDatabase.userDao().getUserByName("Attapon");
+                for (int i=0; i<user.size(); i++){
+                    Log.d(TAG,"======= Success from getUserByName: "+user.get(i).getUid());
+                }
+                return user;
+            }
+        }.execute();
+    }
+
 
     private void getUser() {
         new AsyncTask<List<User>, Void, List<User>>() {
             @Override
             protected List<User> doInBackground(List<User>... lists) {
                 List<User> users = appDatabase.userDao().getAll();
-                Log.d(TAG,"--------- Success from getUser: "+users.get(1).getUid()+" "+users.get(1).getFirstName()+" "+users.get(1).getLastName());
+                for (int i=0; i<users.size(); i++){
+                    Log.d(TAG,"--------- Success from getUser: "+users.get(i).getUid()+" "+users.get(i).getFirstName()+" "+users.get(i).getLastName());
+                }
                 return users;
             }
         }.execute();
-        Log.d(TAG,"--------- Success from getUser");
     }
 
     private void insertUser() {
@@ -95,7 +103,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initInstance() {
-        btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLogin = (Button) findViewById(R.id.btnInsert);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.d(TAG,"Current User:"+currentUser);
+
+        appDatabase = Room.databaseBuilder(this,AppDatabase.class,DB_NAME).build();
+
+        registerReceiver(smsBroadcastReceiver, new IntentFilter("android.provider.Telophony.SMS_RECEIVED"));
+
+        initFcmToken();
     }
 
     private void initFcmToken() {

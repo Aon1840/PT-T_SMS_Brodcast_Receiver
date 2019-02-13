@@ -27,18 +27,24 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         initInstance();
 
-        phone = edtPhone.getText().toString();
-
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validatePhoneNumber(phone) == true) {
-                    Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
-                    intent.putExtra("phone",phone);
-                    Log.d(TAG, "Phone number is: "+phone);
-                    Toast.makeText(LoginActivity.this,"Phone number is: "+phone, Toast.LENGTH_LONG).show();
-                    startActivity(intent);
+                phone = edtPhone.getText().toString();
+                if (phone.isEmpty() || phone.length() < 10){
+                    edtPhone.setError("Invalid Phone number");
+                    edtPhone.requestFocus();
+                    return;
                 }
+
+                String phoneNumber = "+66"+phone;
+
+                Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
+                intent.putExtra("phone",phoneNumber);
+                Log.d(TAG, "Phone number is: "+phone);
+                Toast.makeText(LoginActivity.this,"Phone number is: "+phone, Toast.LENGTH_LONG).show();
+                startActivity(intent);
+
             }
         });
     }
@@ -48,13 +54,4 @@ public class LoginActivity extends AppCompatActivity {
         edtPhone = (EditText) findViewById(R.id.edtPhone);
     }
 
-    private boolean validatePhoneNumber(String phone){
-        if(phone.isEmpty() || phone.length() < 10) {
-            edtPhone.setError("Enter a valid phone number");
-            edtPhone.requestFocus();
-            return false;
-        }
-
-        return true;
-    }
 }

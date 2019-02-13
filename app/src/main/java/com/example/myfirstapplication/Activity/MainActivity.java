@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
 
     private TextView tvHello;
-    private Button btnLogin;
+    private Button btnLogout;
     private WifiManager wifiManager;
     private SmsBroadcastReceiver smsBroadcastReceiver;
     private String fcmToken;
@@ -49,12 +50,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("TEST----", "SDK is: "+Build.VERSION.SDK_INT);
-
+        Log.d(TAG, "-----------Uid from firebase is: "+FirebaseAuth.getInstance().getUid());
         initInstance();
 
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
 //        insertUser();
 //        getUser();
-        getUserName();
+//        getUserName();
     }
 
     private void getUserName() {
@@ -103,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initInstance() {
-        btnLogin = (Button) findViewById(R.id.btnInsert);
+        btnLogout = (Button) findViewById(R.id.btnLogout);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d(TAG,"Current User:"+currentUser);

@@ -14,12 +14,12 @@
         android:text="Hello World!" />
 
     <Button
-        android:id="@+id/btnInsert"
+        android:id="@+id/btnLogout"
         android:layout_below="@+id/tvHello"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="INSERT User"
+        android:text="Log out"
         />
 
 </RelativeLayout>

@@ -7,15 +7,37 @@
     tools:context=".Activity.MainActivity">
 
     <TextView
-        android:id="@+id/tvHello"
+        android:id="@+id/tvPhone"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Phone: -" />
+
+    <TextView
+        android:id="@+id/tvFcmToken"
+        android:layout_below="@id/tvPhone"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FCM Token: -" />
+
+    <TextView
+        android:id="@+id/tvUid"
+        android:layout_below="@id/tvFcmToken"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Uid: -" />
 
     <Button
         android:id="@+id/btnLogout"
-        android:layout_below="@+id/tvHello"
+        android:layout_below="@id/tvUid"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

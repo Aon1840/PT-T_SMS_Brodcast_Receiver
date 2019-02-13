@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
 
-    private TextView tvHello;
+    private TextView tvPhone, tvFcmToken, tvUid;
     private Button btnLogout;
     private WifiManager wifiManager;
     private SmsBroadcastReceiver smsBroadcastReceiver;
@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "-----------Uid from firebase is: "+FirebaseAuth.getInstance().getUid());
         initInstance();
 
+        tvPhone.setText("Mobile: "+FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        tvUid.setText("UID: "+FirebaseAuth.getInstance().getUid());
+
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        insertUser();
-//        getUser();
-//        getUserName();
     }
 
     private void getUserName() {
@@ -118,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d(TAG,"Current User:"+currentUser);
 
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
+        tvFcmToken = (TextView) findViewById(R.id.tvFcmToken);
+        tvUid = (TextView) findViewById(R.id.tvUid);
+
         appDatabase = Room.databaseBuilder(this,AppDatabase.class,DB_NAME).build();
 
         registerReceiver(smsBroadcastReceiver, new IntentFilter("android.provider.Telophony.SMS_RECEIVED"));
@@ -141,8 +145,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "getInstanceId Token: " + fcmToken, Toast.LENGTH_LONG).show();
                         Log.d("TAG-------------", "token: " + fcmToken);
 
-                        tvHello = (TextView) findViewById(R.id.tvHello);
-                        tvHello.setText(fcmToken);
+                        tvFcmToken.setText("FCM Token: "+fcmToken);
 
                     }
                 });
@@ -161,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    LoginByEmailPassword
     //        mAuth.createUserWithEmailAndPassword("aonattapon1840.ap@gmail.com", "12345679")
 //                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 //                    @Override

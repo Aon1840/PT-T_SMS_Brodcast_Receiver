@@ -1,14 +1,21 @@
 package com.example.myfirstapplication.Activity;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.myfirstapplication.Database.AppDatabase;
+import com.example.myfirstapplication.Database.User;
 import com.example.myfirstapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +36,8 @@ public class VerifyActivity extends AppCompatActivity {
     private Button btnLogin;
     private FirebaseAuth mAuth;
     private String verificationId;
+    private String DB_NAME = "user";
+    private AppDatabase appDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +54,17 @@ public class VerifyActivity extends AppCompatActivity {
                     edtOtp.requestFocus();
                     return;
                 }
-                verifyCode(code);
+
+                SharedPreferences prefs = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                String phone = prefs.getString("phone",null);
+                Log.d(TAG, "----- phone from verify: "+phone);
+
+                if (phone != null) {
+                    verifyCode(code);
+                }
+
             }
         });
-    }
-
-    private void initInstance() {
-        edtOtp = (EditText) findViewById(R.id.edtOtp);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-
-        mAuth = FirebaseAuth.getInstance();
-        String phone = getIntent().getStringExtra("phone");
-        sendVerificationCode(phone);
     }
 
     private void sendVerificationCode(String phone){
@@ -64,7 +72,7 @@ public class VerifyActivity extends AppCompatActivity {
                 phone,
                 60,
                 TimeUnit.SECONDS,
-                TaskExecutors.MAIN_THREAD,
+                this,
                 mCallBack
         );
     }
@@ -80,6 +88,7 @@ public class VerifyActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
+
                             Intent intent = new Intent(VerifyActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -109,7 +118,31 @@ public class VerifyActivity extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            Log.d(TAG,"------FAILED: "+e.getMessage());
             Toast.makeText(VerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
         }
     };
+
+    private void insertUserTask(final User user) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                User user = new User();
+                user.setPhoneNumber(getIntent().getStringExtra("phone"));
+                appDatabase.userDao().createUser(user);
+                return null;
+            }
+        }.execute();
+        Log.d(TAG,"-------------- Success from insertUserTask");
+    }
+
+    private void initInstance() {
+        edtOtp = (EditText) findViewById(R.id.edtOtp);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+
+        mAuth = FirebaseAuth.getInstance();
+        String phone = getIntent().getStringExtra("phone");
+        sendVerificationCode(phone);
+    }
+
 }

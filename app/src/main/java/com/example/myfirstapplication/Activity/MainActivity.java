@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
 
-    private TextView tvPhone, tvFcmToken, tvUid;
-    private Button btnLogout;
+    private TextView tvPhone, tvFcmToken, tvUid, tvContact;
+    private Button btnLogout, btnEdit;
     private WifiManager wifiManager;
     private SmsBroadcastReceiver smsBroadcastReceiver;
     private String fcmToken;
     private FirebaseAuth mAuth;
+    private ListView listView;
 
     private String DB_NAME = "user";
     private AppDatabase appDatabase;
@@ -52,9 +54,18 @@ public class MainActivity extends AppCompatActivity {
         Log.d("TEST----", "SDK is: "+Build.VERSION.SDK_INT);
         Log.d(TAG, "-----------Uid from firebase is: "+FirebaseAuth.getInstance().getUid());
         initInstance();
-
-        tvPhone.setText("Mobile: "+FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
         tvUid.setText("UID: "+FirebaseAuth.getInstance().getUid());
+        tvPhone.setText("Mobile: "+FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        getUser();
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                intent.putExtra("phone",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                startActivity(intent);
+            }
+        });
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +76,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void setInfoUser(final String phone){
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                User user = appDatabase.userDao().getUserByPhone(phone);
+                Log.d(TAG,"----- phone from setInfoUser"+ phone);
+                Log.d(TAG,"----- user from setInfoUser: "+user);
+                try {
+                    tvPhone.setText("Mobile: "+phone);
+                    tvUid.setText("UID: "+FirebaseAuth.getInstance().getUid());
+                } catch (Exception e) {
+                    Log.d(TAG,"----- Exception from setInfoUser: "+e.getMessage());
+                    tvPhone.setText("Mobile: "+FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                    tvUid.setText("UID: "+FirebaseAuth.getInstance().getUid());
+                }
+                return null;
+            }
+        }.execute();
     }
 
     private void getUserName() {
@@ -87,7 +118,11 @@ public class MainActivity extends AppCompatActivity {
             protected List<User> doInBackground(List<User>... lists) {
                 List<User> users = appDatabase.userDao().getAll();
                 for (int i=0; i<users.size(); i++){
-                    Log.d(TAG,"--------- Success from getUser: "+users.get(i).getUid()+" "+users.get(i).getFirstName()+" "+users.get(i).getLastName());
+                    String str = users.toString();
+                    Log.d(TAG,"---- test String "+str);
+                    tvContact.setText("Contact: \n"+str+"\n");
+                    Log.d(TAG,"--------- Success from getUser: "+users.get(i).getUid()+" "+users.get(i).getFirstName()+" "+users.get(i).getLastName()+" "+users.get(i).getPhoneNumber()+" "+users.get(i).getEmail());
+
                 }
                 return users;
             }
@@ -121,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
         tvPhone = (TextView) findViewById(R.id.tvPhone);
         tvFcmToken = (TextView) findViewById(R.id.tvFcmToken);
         tvUid = (TextView) findViewById(R.id.tvUid);
+        tvContact = (TextView) findViewById(R.id.tvContact);
+        btnEdit = (Button) findViewById(R.id.btnEdit);
+//        listView = (ListView) findViewById(R.id.listView);
+
 
         appDatabase = Room.databaseBuilder(this,AppDatabase.class,DB_NAME).build();
 

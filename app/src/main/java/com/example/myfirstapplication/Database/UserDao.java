@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -19,10 +20,19 @@ public interface UserDao {
     @Query("SELECT * FROM user WHERE first_name LIKE :first")
     List<User> getUserByName(String first);
 
+    @Query("SELECT * FROM user WHERE phone_number LIKE :phone")
+    User getUserByPhone(String phone);
+
     @Insert
     void createUser(User... users);
 
-    @Delete
-    void deleteUser(User user);
+    @Query("DELETE FROM user ")
+    void deleteUser();
+
+    @Update
+    void updateUser(User user);
+
+
+
 
 }

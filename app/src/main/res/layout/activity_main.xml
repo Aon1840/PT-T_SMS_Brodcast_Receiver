@@ -10,7 +10,7 @@
         android:id="@+id/tvPhone"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Phone: -" />
@@ -35,13 +35,36 @@
         android:layout_height="wrap_content"
         android:text="Uid: -" />
 
-    <Button
-        android:id="@+id/btnLogout"
+    <LinearLayout
+        android:id="@+id/layout"
+        android:gravity="center"
         android:layout_below="@id/tvUid"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log out"
-        />
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnEdit"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Contact"
+            />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log out"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvContact"
+        android:layout_below="@id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
